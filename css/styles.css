@@ -1,0 +1,168 @@
+/* Estilos Tienda Nube Humanizada - Universo Descartables */
+/* Diseñado siguiendo las directrices de UI/UX Pro Max */
+
+:root {
+  --font-heading: 'Rubik', sans-serif;
+  --font-body: 'Nunito Sans', sans-serif;
+  --color-brand-navy: #162a45;
+  --color-brand-dark: #0f172a;
+  --color-teal: #0d9488;
+  --color-teal-dark: #0f766e;
+  --color-whatsapp: #22c55e;
+  --color-whatsapp-hover: #16a34a;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: #f8fafc;
+  color: #1e293b;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: var(--font-heading);
+}
+
+/* Ocultar scrollbars horizontales manteniendo desplazamiento */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Scrollbar sutil para el carrito */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Tarjetas de Producto - Estilo Tienda Nube */
+.product-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+  border-color: #cbd5e1;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+}
+
+/* Botones de acción táctiles */
+.btn-primary {
+  background-color: #0d9488;
+  color: #ffffff;
+  font-weight: 700;
+  transition: all 0.15s ease;
+}
+.btn-primary:hover {
+  background-color: #0f766e;
+}
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-whatsapp {
+  background-color: #22c55e;
+  color: #ffffff;
+  font-weight: 700;
+  transition: all 0.15s ease;
+}
+.btn-whatsapp:hover {
+  background-color: #16a34a;
+}
+.btn-whatsapp:active {
+  transform: scale(0.98);
+}
+
+/* Badges de producto limpios (Sin emojis) */
+.badge-eco {
+  background-color: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.badge-promo {
+  background-color: #0d9488;
+  color: #ffffff;
+}
+
+.badge-best-seller {
+  background-color: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.badge-wholesale {
+  background-color: #1e293b;
+  color: #f8fafc;
+}
+
+/* Micro-animación de rebote del carrito */
+@keyframes badgePop {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.25); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+.badge-pop {
+  animation: badgePop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes cartBounce {
+  0%, 100% { transform: scale(1); }
+  30% { transform: scale(1.2) rotate(-5deg); }
+  60% { transform: scale(1.1) rotate(5deg); }
+}
+
+.animate-cart-bounce {
+  animation: cartBounce 0.45s ease-in-out;
+}
+
+/* Barra de progreso de descuento mayorista */
+.progress-bar-fill {
+  transition: width 0.4s ease-in-out;
+}
+
+/* Acordeón FAQ */
+.faq-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
+}
+.faq-item.active .faq-content {
+  max-height: 300px;
+  transition: max-height 0.35s ease-in-out;
+}
+.faq-item.active .faq-chevron {
+  transform: rotate(180deg);
+}
+
+/* Accesibilidad y touch */
+.touch-target {
+  min-width: 48px;
+  min-height: 48px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

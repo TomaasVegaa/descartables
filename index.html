@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Universo Descartables | Insumos, Packaging y Vajilla en Tucumán</title>
+  <meta name="description" content="Tienda online de envases descartables, viandas, vasos térmicos, repostería y packaging en San Miguel de Tucumán. Venta minorista y mayorista con atención directa por WhatsApp." />
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>" />
+
+  <!-- Google Fonts: Rubik (Headings) + Nunito Sans (Body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300..800;1,6..12,300..800&family=Rubik:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            heading: ['Rubik', 'sans-serif'],
+            sans: ['Nunito Sans', 'sans-serif'],
+          },
+          colors: {
+            store: {
+              navy: '#162a45',
+              dark: '#0f172a',
+              teal: '#0d9488',
+              'teal-dark': '#0f766e',
+              whatsapp: '#22c55e',
+              'whatsapp-hover': '#16a34a',
+              amber: '#f59e0b',
+              gray: '#f8fafc'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-[#f8fafc] text-slate-800 min-h-screen flex flex-col antialiased pb-20 md:pb-0">
+
+  <!-- ========================================================================= -->
+  <!-- 1. TOP UTILITY BAR (Estilo Tienda Nube)                                    -->
+  <!-- ========================================================================= -->
+  <div class="bg-slate-900 text-slate-200 text-xs py-2 px-4 border-b border-slate-800 select-none">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-2 mx-auto md:mx-0 text-center">
+        <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+        <span id="ticker-text" class="font-medium text-xs truncate max-w-[290px] sm:max-w-md md:max-w-none text-slate-100">
+          Envíos en San Miguel de Tucumán y retiro gratuito en Calle Raúl Colombres 123
+        </span>
+      </div>
+      <div class="hidden md:flex items-center gap-5 text-xs text-slate-300">
+        <span class="flex items-center gap-1.5">
+          <i data-lucide="map-pin" class="w-3.5 h-3.5 text-teal-400"></i>
+          Calle Raúl Colombres 123, Tucumán
+        </span>
+        <a href="https://wa.me/5493816604958" target="_blank" class="hover:text-white flex items-center gap-1.5 transition-colors font-medium">
+          <i data-lucide="phone" class="w-3.5 h-3.5 text-emerald-400"></i>
+          381 660-4958
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 2. CABECERA PRINCIPAL (Limpia, Blanca, Estilo Tienda Nube)                -->
+  <!-- ========================================================================= -->
+  <header class="sticky top-0 z-30 bg-white border-b border-slate-200 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 py-3 md:py-3.5">
+      <div class="flex items-center justify-between gap-3 md:gap-6">
+        
+        <!-- Logo de la Marca -->
+        <a href="#" class="flex items-center gap-2.5 flex-shrink-0 group">
+          <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center shadow-xs">
+            <i data-lucide="package" class="w-5 h-5 text-teal-400"></i>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-heading font-black text-lg md:text-xl text-slate-900 tracking-tight leading-none">
+              UNIVERSO
+            </span>
+            <span class="text-[10px] md:text-xs font-bold text-teal-700 uppercase tracking-widest">
+              Descartables
+            </span>
+          </div>
+        </a>
+
+        <!-- Buscador de Productos -->
+        <div class="flex-1 max-w-lg relative">
+          <div class="relative flex items-center">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none"></i>
+            <input 
+              type="text" 
+              id="search-input" 
+              placeholder="Buscar bandejas, vasos, bolsas, cajas..." 
+              class="w-full bg-slate-100/90 text-slate-900 placeholder-slate-400 text-xs md:text-sm pl-10 pr-9 py-2.5 rounded-full border border-slate-200 focus:outline-none focus:border-teal-600 focus:bg-white focus:ring-2 focus:ring-teal-600/15 transition"
+              autocomplete="off"
+            />
+            <button 
+              id="clear-search-btn" 
+              class="hidden absolute right-3 text-slate-400 hover:text-slate-700 p-0.5 rounded-full"
+              title="Limpiar búsqueda"
+            >
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Acciones del Header -->
+        <div class="flex items-center gap-3">
+          <!-- Botón WhatsApp Soporte -->
+          <a 
+            href="https://wa.me/5493816604958?text=Hola%20Universo%20Descartables!%20Tengo%20una%20consulta." 
+            target="_blank"
+            class="hidden lg:flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 transition"
+          >
+            <i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i>
+            <span>Consultar</span>
+          </a>
+
+          <!-- Botón de Carrito -->
+          <button 
+            class="open-cart-btn relative flex items-center gap-2 bg-slate-900 hover:bg-slate-800 active:scale-95 text-white px-3.5 py-2.5 rounded-xl text-xs md:text-sm font-bold shadow-xs transition-all cursor-pointer"
+            aria-label="Ver carrito"
+          >
+            <i data-lucide="shopping-bag" class="w-4 h-4 text-teal-400"></i>
+            <span class="hidden sm:inline font-heading">Mi Carrito</span>
+            <span class="cart-badge hidden w-5 h-5 bg-teal-500 text-white font-extrabold text-xs rounded-full items-center justify-center">
+              0
+            </span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 3. HERO / BANNER PRINCIPAL (Estilo Tienda Nube con Fondo de Packaging)   -->
+  <!-- ========================================================================= -->
+  <section class="bg-gradient-to-b from-white to-slate-100/70 border-b border-slate-200 pt-7 pb-8 px-4">
+    <div class="max-w-7xl mx-auto">
+      <div class="rounded-3xl text-white p-6 sm:p-8 md:p-12 shadow-md relative overflow-hidden bg-slate-950 border border-slate-800">
+        
+        <!-- Imagen de Fondo con Packaging, Bolsas Kraft y Descartables -->
+        <img 
+          src="https://images.unsplash.com/photo-1530587191325-3db32d826c18?w=1600&auto=format&fit=crop&q=80" 
+          alt="Bolsas y packaging descartables" 
+          class="absolute inset-0 w-full h-full object-cover object-center opacity-30 transform scale-105"
+          loading="eager"
+        />
+
+        <!-- Capa de degradado profesional para máxima legibilidad -->
+        <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/85 to-slate-900/50"></div>
+        <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-teal-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-2xl relative z-10">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/90 text-teal-300 text-xs font-semibold mb-3.5 border border-teal-500/30 backdrop-blur-xs">
+            <i data-lucide="check" class="w-3.5 h-3.5 text-teal-400"></i>
+            Venta Mayorista & Minorista en Tucumán
+          </div>
+
+          <h1 class="font-heading text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight mb-3 text-white">
+            Insumos descartables y packaging para gastronomía y eventos.
+          </h1>
+
+          <p class="text-xs sm:text-sm text-slate-200 leading-relaxed mb-6 max-w-xl">
+            Abastecemos rotiserías, panaderías, cafeterías y catering en San Miguel de Tucumán y alrededores. Armá tu pedido online y envialo directo a nuestro WhatsApp sin intermediarios.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <a 
+              href="#catalog-title" 
+              class="btn-primary text-xs sm:text-sm px-5 py-3 rounded-xl inline-flex items-center gap-2 shadow-md cursor-pointer"
+            >
+              <i data-lucide="grid" class="w-4 h-4"></i>
+              Explorar Catálogo
+            </a>
+            <a 
+              href="https://wa.me/5493816604958?text=Hola!%20Quisiera%20consultar%20por%20precios%20mayoristas%20por%20bulto%20cerrado." 
+              target="_blank"
+              class="bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm text-xs sm:text-sm font-bold px-4 py-3 rounded-xl inline-flex items-center gap-2 border border-white/20 transition cursor-pointer"
+            >
+              <i data-lucide="message-square" class="w-4 h-4 text-emerald-400"></i>
+              Cotización Mayorista
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 4. PILARES DE CONFIANZA                                                   -->
+  <!-- ========================================================================= -->
+  <section class="bg-white border-b border-slate-200 py-6 px-4">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        
+        <div class="flex items-start gap-3">
+          <div class="w-9 h-9 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center flex-shrink-0">
+            <i data-lucide="truck" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="font-heading text-xs md:text-sm font-bold text-slate-900">Envíos y Retiro</h4>
+            <p class="text-[11px] text-slate-500 mt-0.5">Retiro gratis en Calle Raúl Colombres 123 o envíos en Tucumán.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3">
+          <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center flex-shrink-0">
+            <i data-lucide="credit-card" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="font-heading text-xs md:text-sm font-bold text-slate-900">10% OFF Transferencia</h4>
+            <p class="text-[11px] text-slate-500 mt-0.5">Descuento directo abonando mediante transferencia bancaria.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3">
+          <div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center flex-shrink-0">
+            <i data-lucide="building-2" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="font-heading text-xs md:text-sm font-bold text-slate-900">Descuento Mayorista</h4>
+            <p class="text-[11px] text-slate-500 mt-0.5">10% de ahorro automático superando $40.000 de compra.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3">
+          <div class="w-9 h-9 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center flex-shrink-0">
+            <i data-lucide="shield-check" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="font-heading text-xs md:text-sm font-bold text-slate-900">Atención Directa</h4>
+            <p class="text-[11px] text-slate-500 mt-0.5">Confirmamos stock y coordinamos tu pedido al instante por WhatsApp.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 5. CHIPS DE CATEGORÍAS                                                    -->
+  <!-- ========================================================================= -->
+  <section id="categories-section" class="sticky top-[61px] md:top-[69px] z-20 bg-white/95 backdrop-blur-md border-b border-slate-200 py-3 shadow-2xs">
+    <div class="max-w-7xl mx-auto px-4">
+      <div id="category-chips-container" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
+        <!-- Renderizado dinámicamente -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 6. CATÁLOGO DE PRODUCTOS                                                  -->
+  <!-- ========================================================================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 md:py-8">
+    
+    <div class="flex items-center justify-between mb-5" id="catalog-title">
+      <div>
+        <h2 class="font-heading text-lg md:text-2xl font-bold text-slate-900">
+          Nuestros Productos
+        </h2>
+        <p id="results-count" class="text-xs text-slate-500 mt-0.5">Cargando catálogo...</p>
+      </div>
+      
+      <div class="text-xs text-slate-600 hidden sm:flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-lg shadow-2xs">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Stock en San Miguel de Tucumán
+      </div>
+    </div>
+
+    <!-- Grilla de Productos -->
+    <div id="products-grid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 md:gap-5">
+      <!-- Renderizado dinámicamente -->
+    </div>
+
+    <!-- Estado Vacío -->
+    <div id="no-products-state" class="hidden py-16 text-center bg-white rounded-2xl border border-slate-200 p-8 my-6">
+      <div class="w-12 h-12 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-3">
+        <i data-lucide="search-x" class="w-6 h-6"></i>
+      </div>
+      <h3 class="font-heading text-base font-bold text-slate-800 mb-1">No se encontraron productos</h3>
+      <p class="text-xs text-slate-500 mb-4 max-w-md mx-auto">Probá buscando con otro término o seleccioná otra categoría.</p>
+      <button 
+        onclick="App.setCategory('todos'); document.getElementById('search-input').value = ''; App.searchQuery = ''; App.renderProducts();"
+        class="btn-primary text-xs py-2 px-4 rounded-xl cursor-pointer"
+      >
+        Ver todos los productos
+      </button>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- 7. SOBRE UNIVERSO DESCARTABLES (Tucumán)                                 -->
+    <!-- ======================================================================= -->
+    <section class="mt-14 bg-white rounded-3xl border border-slate-200 p-6 md:p-8 shadow-xs">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <div>
+          <span class="text-xs font-bold text-teal-700 uppercase tracking-wider">Comercio Tucumano</span>
+          <h3 class="font-heading text-xl md:text-2xl font-bold text-slate-900 mt-1 mb-3">
+            Especialistas en packaging y descartables para tu emprendimiento
+          </h3>
+          <p class="text-xs md:text-sm text-slate-600 leading-relaxed mb-4">
+            En <strong>Universo Descartables</strong> nos dedicamos a abastecer a rotiserías, casas de comidas, panaderías, bares, organizadores de eventos y familias en Tucumán con productos higiénicos, resistentes y al mejor precio de plaza.
+          </p>
+          <div class="space-y-2 text-xs text-slate-700 font-medium">
+            <div class="flex items-center gap-2">
+              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+              <span>Atención personalizada y ágil por WhatsApp.</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+              <span>Retiro en nuestro local de Calle Raúl Colombres 123.</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+              <span>Línea completa biodegradable y eco-friendly.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 md:p-6 text-center sm:text-left">
+          <h4 class="font-heading text-base font-bold text-slate-900 mb-1">¿Tenés un comercio o compra por mayor?</h4>
+          <p class="text-xs text-slate-500 mb-4">Escribinos para solicitar cotizaciones por bulto cerrado y entregas programadas en Tucumán.</p>
+          <a 
+            href="https://wa.me/5493816604958?text=Hola!%20Tengo%20un%20comercio%20en%20Tucumán%20y%20quisiera%20solicitar%20asesoramiento%20comercial." 
+            target="_blank"
+            class="btn-whatsapp text-xs py-3 px-4 rounded-xl inline-flex items-center justify-center gap-2 w-full shadow-xs cursor-pointer"
+          >
+            <i data-lucide="message-circle" class="w-4 h-4"></i>
+            <span>Hablar con un Asesor Comercial</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- 8. PREGUNTAS FRECUENTES (FAQ)                                           -->
+    <!-- ======================================================================= -->
+    <section class="mt-12">
+      <div class="text-center mb-6">
+        <h3 class="font-heading text-lg md:text-xl font-bold text-slate-900">Preguntas Frecuentes</h3>
+        <p class="text-xs text-slate-500 mt-1">Todo lo que necesitás saber para comprar en Universo Descartables</p>
+      </div>
+
+      <div id="faqs-container" class="max-w-3xl mx-auto space-y-3">
+        <!-- Renderizado dinámicamente -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- 9. FOOTER                                                                 -->
+  <!-- ========================================================================= -->
+  <footer class="bg-white border-t border-slate-200 text-xs mt-14">
+    <div class="max-w-7xl mx-auto px-4 py-8 md:py-12">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        
+        <div class="md:col-span-2">
+          <div class="flex items-center gap-2.5 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center">
+              <i data-lucide="package" class="w-4 h-4 text-teal-400"></i>
+            </div>
+            <span class="font-heading font-bold text-base text-slate-900">UNIVERSO DESCARTABLES</span>
+          </div>
+          <p class="text-slate-500 text-xs max-w-sm mb-4 leading-relaxed">
+            Venta minorista y mayorista de descartables, packaging y vajilla descartable en Tucumán.
+          </p>
+          <div class="flex items-center gap-2 text-slate-600 font-medium">
+            <i data-lucide="map-pin" class="w-4 h-4 text-teal-700"></i>
+            <span>Calle Raúl Colombres 123, San Miguel de Tucumán</span>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-heading font-bold text-slate-900 mb-3 uppercase tracking-wider text-xs">Categorías</h4>
+          <ul class="space-y-2 text-slate-600">
+            <li><button onclick="App.setCategory('envases')" class="hover:text-teal-700 transition cursor-pointer">Envases & Viandas</button></li>
+            <li><button onclick="App.setCategory('vasos')" class="hover:text-teal-700 transition cursor-pointer">Vasos & Bebidas</button></li>
+            <li><button onclick="App.setCategory('bolsas')" class="hover:text-teal-700 transition cursor-pointer">Bolsas & Papelera</button></li>
+            <li><button onclick="App.setCategory('reposteria')" class="hover:text-teal-700 transition cursor-pointer">Repostería & Panadería</button></li>
+            <li><button onclick="App.setCategory('higiene')" class="hover:text-teal-700 transition cursor-pointer">Higiene & Limpieza</button></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-heading font-bold text-slate-900 mb-3 uppercase tracking-wider text-xs">Horarios & Contacto</h4>
+          <p class="text-slate-600 mb-1">Lunes a Viernes: 8:30 a 18:00 hs</p>
+          <p class="text-slate-600 mb-3">Sábados: 9:00 a 13:00 hs</p>
+          <a 
+            href="https://wa.me/5493816604958" 
+            target="_blank"
+            class="btn-whatsapp text-xs px-3.5 py-2 rounded-xl inline-flex items-center gap-1.5 shadow-2xs"
+          >
+            <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+            <span>381 660-4958</span>
+          </a>
+        </div>
+
+      </div>
+
+      <div class="pt-6 border-t border-slate-100 text-center text-slate-400 text-[11px] flex flex-col sm:flex-row items-center justify-between gap-2">
+        <span>© 2026 Universo Descartables • San Miguel de Tucumán, Argentina</span>
+        <span>Integración de Checkout directo por WhatsApp</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- 10. CARRITO LATERAL (DRAWER)                                              -->
+  <!-- ========================================================================= -->
+  <div id="cart-backdrop" class="fixed inset-0 bg-slate-900/60 z-40 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+  <aside 
+    id="cart-drawer" 
+    class="fixed top-0 right-0 bottom-0 w-full sm:w-[400px] max-w-full bg-white z-50 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-out"
+    aria-label="Carrito de Compras"
+  >
+    <!-- Header del Carrito -->
+    <div class="p-4 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800">
+      <div class="flex items-center gap-2">
+        <i data-lucide="shopping-bag" class="w-5 h-5 text-teal-400"></i>
+        <h3 class="font-heading font-bold text-base">Carrito de Compras</h3>
+      </div>
+      <button 
+        id="close-cart-btn" 
+        class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer"
+        title="Cerrar"
+      >
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <!-- Barra de Descuento Mayorista -->
+    <div class="p-3 bg-slate-50 border-b border-slate-200">
+      <div id="cart-discount-meter">
+        <!-- Renderizado dinámicamente -->
+      </div>
+    </div>
+
+    <!-- Lista de Items -->
+    <div class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2.5">
+      <div id="cart-items-container" class="space-y-2.5">
+        <!-- Renderizado dinámicamente -->
+      </div>
+
+      <!-- Estado Vacío -->
+      <div id="cart-empty-state" class="py-16 text-center px-4">
+        <div class="w-14 h-14 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-3">
+          <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+        </div>
+        <h4 class="font-heading font-bold text-slate-800 text-base mb-1">Tu carrito está vacío</h4>
+        <p class="text-xs text-slate-500 mb-5">Elegí productos del catálogo para armar tu pedido.</p>
+        <button 
+          onclick="CartManager.closeDrawer()" 
+          class="btn-primary text-xs py-2.5 px-5 rounded-xl cursor-pointer"
+        >
+          Ver Productos
+        </button>
+      </div>
+    </div>
+
+    <!-- Resumen y Checkout -->
+    <div id="cart-footer" class="p-4 bg-white border-t border-slate-200 shadow-lg space-y-3">
+      
+      <div class="space-y-1.5 text-xs">
+        <div class="flex justify-between text-slate-600">
+          <span>Subtotal:</span>
+          <span id="cart-subtotal-val" class="font-bold text-slate-800">$ 0</span>
+        </div>
+        <div id="cart-wholesale-row" class="hidden flex justify-between text-emerald-700 font-semibold">
+          <span>Descuento Mayorista (10%):</span>
+          <span id="cart-wholesale-val">-$ 0</span>
+        </div>
+        <div id="cart-transfer-row" class="hidden flex justify-between text-teal-700 font-semibold">
+          <span>Descuento Transferencia (10% extra):</span>
+          <span id="cart-transfer-val">-$ 0</span>
+        </div>
+        <div class="flex justify-between text-base font-extrabold text-slate-900 pt-2 border-t border-slate-100">
+          <span>Total estimado:</span>
+          <span id="cart-total-val" class="font-heading text-slate-900 text-lg">$ 0</span>
+        </div>
+      </div>
+
+      <button 
+        id="btn-start-checkout" 
+        class="w-full btn-whatsapp py-3.5 px-4 rounded-xl text-sm flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+      >
+        <i data-lucide="message-circle" class="w-4 h-4"></i>
+        <span>Iniciar Compra / Enviar Pedido</span>
+      </button>
+
+      <p class="text-[11px] text-center text-slate-400">
+        Completás los datos de entrega en el siguiente paso.
+      </p>
+    </div>
+  </aside>
+
+  <!-- ========================================================================= -->
+  <!-- 11. MODAL DE CHECKOUT                                                     -->
+  <!-- ========================================================================= -->
+  <div id="checkout-modal" class="fixed inset-0 bg-slate-950/70 z-50 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col">
+      
+      <!-- Header Modal -->
+      <div class="p-4 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800 flex-shrink-0">
+        <div>
+          <h3 class="font-heading font-bold text-base flex items-center gap-2">
+            <span>Completar Pedido para WhatsApp</span>
+          </h3>
+          <p class="text-xs text-slate-400">Ingresá tus datos para coordinar el despacho</p>
+        </div>
+        <button id="close-checkout-btn" class="text-slate-400 hover:text-white p-1 cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Formulario -->
+      <form id="checkout-form" class="p-4 sm:p-5 overflow-y-auto custom-scrollbar space-y-4">
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1" for="checkout-name">
+              Nombre y Apellido <span class="text-rose-500">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="checkout-name" 
+              required 
+              placeholder="Ej: Juan Pérez"
+              class="w-full text-xs sm:text-sm px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1" for="checkout-phone">
+              Celular de Contacto <span class="text-rose-500">*</span>
+            </label>
+            <input 
+              type="tel" 
+              id="checkout-phone" 
+              required 
+              placeholder="Ej: 381 1234567"
+              class="w-full text-xs sm:text-sm px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600"
+            />
+          </div>
+        </div>
+
+        <!-- Método de Entrega -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5">
+            Método de Entrega <span class="text-rose-500">*</span>
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            
+            <label class="relative flex items-center p-3 rounded-xl border border-slate-200 cursor-pointer hover:border-slate-300 bg-white has-[:checked]:border-teal-600 has-[:checked]:bg-teal-50/30">
+              <input type="radio" name="delivery-method" value="retiro" checked class="w-4 h-4 text-teal-600 focus:ring-teal-500" />
+              <div class="ml-2.5 text-xs">
+                <span class="font-bold text-slate-900 block">Retiro en Local (Gratis)</span>
+                <span class="text-slate-500 text-[11px]">Calle Raúl Colombres 123, Tucumán</span>
+              </div>
+            </label>
+
+            <label class="relative flex items-center p-3 rounded-xl border border-slate-200 cursor-pointer hover:border-slate-300 bg-white has-[:checked]:border-teal-600 has-[:checked]:bg-teal-50/30">
+              <input type="radio" name="delivery-method" value="envio" class="w-4 h-4 text-teal-600 focus:ring-teal-500" />
+              <div class="ml-2.5 text-xs">
+                <span class="font-bold text-slate-900 block">Envío a Domicilio</span>
+                <span class="text-slate-500 text-[11px]">San Miguel de Tucumán e Interior</span>
+              </div>
+            </label>
+
+          </div>
+        </div>
+
+        <div id="pickup-info-box" class="bg-slate-50 border border-slate-200 p-3 rounded-xl text-xs text-slate-600 flex items-start gap-2">
+          <i data-lucide="info" class="w-4 h-4 text-teal-700 flex-shrink-0 mt-0.5"></i>
+          <span>Podés retirar de Lunes a Viernes de 8:30 a 18:00 hs en Calle Raúl Colombres 123, San Miguel de Tucumán, una vez confirmado el stock por WhatsApp.</span>
+        </div>
+
+        <!-- Dirección de Entrega -->
+        <div id="address-wrapper" class="opacity-50 transition-opacity">
+          <label class="block text-xs font-bold text-slate-700 mb-1" for="checkout-address">
+            Dirección de Entrega
+          </label>
+          <input 
+            type="text" 
+            id="checkout-address" 
+            disabled 
+            placeholder="No requerida para Retiro en Local"
+            class="w-full text-xs sm:text-sm px-3 py-2 rounded-xl border border-slate-300 bg-slate-100 text-slate-400 cursor-not-allowed focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600"
+          />
+        </div>
+
+        <!-- Método de Pago -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5">
+            Método de Pago Preferido <span class="text-rose-500">*</span>
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            
+            <label class="relative flex items-center p-3 rounded-xl border border-slate-200 cursor-pointer hover:border-slate-300 bg-white has-[:checked]:border-teal-600 has-[:checked]:bg-teal-50/30">
+              <input type="radio" name="payment-method" value="transferencia" checked class="w-4 h-4 text-teal-600 focus:ring-teal-500" />
+              <div class="ml-2.5 text-xs">
+                <span class="font-bold text-slate-900 block">Transferencia (10% OFF)</span>
+                <span class="text-emerald-700 font-semibold text-[11px]">¡Ahorro adicional!</span>
+              </div>
+            </label>
+
+            <label class="relative flex items-center p-3 rounded-xl border border-slate-200 cursor-pointer hover:border-slate-300 bg-white has-[:checked]:border-teal-600 has-[:checked]:bg-teal-50/30">
+              <input type="radio" name="payment-method" value="efectivo" class="w-4 h-4 text-teal-600 focus:ring-teal-500" />
+              <div class="ml-2.5 text-xs">
+                <span class="font-bold text-slate-900 block">Efectivo al recibir</span>
+                <span class="text-slate-500 text-[11px]">En local o contraentrega</span>
+              </div>
+            </label>
+
+          </div>
+        </div>
+
+        <!-- Notas -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1" for="checkout-notes">
+            Notas o Aclaraciones (Opcional)
+          </label>
+          <textarea 
+            id="checkout-notes" 
+            rows="2" 
+            placeholder="Horario de preferencia para retiro o entrega, aclaraciones..."
+            class="w-full text-xs sm:text-sm px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600"
+          ></textarea>
+        </div>
+
+        <!-- Resumen de Costos -->
+        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs space-y-1.5">
+          <div class="flex justify-between text-slate-600">
+            <span>Subtotal:</span>
+            <span id="checkout-subtotal" class="font-bold">$ 0</span>
+          </div>
+          <div id="checkout-discount-row" class="hidden flex justify-between text-emerald-700 font-semibold">
+            <span>Descuentos acumulados:</span>
+            <span id="checkout-discounts">-$ 0</span>
+          </div>
+          <div class="flex justify-between text-sm font-extrabold text-slate-900 pt-1.5 border-t border-slate-200">
+            <span>TOTAL FINAL A ABONAR:</span>
+            <span id="checkout-total" class="font-heading text-slate-900 text-base">$ 0</span>
+          </div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="flex items-center gap-2.5 pt-2">
+          <button 
+            type="button" 
+            id="cancel-checkout-btn" 
+            class="w-1/3 py-3 px-3 rounded-xl border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-100 transition cursor-pointer"
+          >
+            Volver
+          </button>
+          
+          <button 
+            type="submit" 
+            id="btn-submit-order"
+            class="w-2/3 btn-whatsapp py-3 px-4 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+          >
+            <i data-lucide="message-circle" class="w-4 h-4"></i>
+            <span>Enviar Pedido por WhatsApp</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 12. MODAL DE VISTA RÁPIDA DE PRODUCTO                                     -->
+  <!-- ========================================================================= -->
+  <div id="quickview-modal" class="fixed inset-0 bg-slate-950/70 z-50 hidden items-center justify-center p-4">
+    <div id="quickview-backdrop" class="absolute inset-0"></div>
+    <div class="bg-white rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden relative z-10 p-5 md:p-7 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <button id="close-quickview-btn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center transition cursor-pointer">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+      <div id="quickview-content">
+        <!-- Renderizado dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 13. BARRA INFERIOR FIJA MÓVIL (STICKY DOCK)                               -->
+  <!-- ========================================================================= -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-lg px-2 py-1.5">
+    <div class="flex items-center justify-around">
+      
+      <button id="bottom-nav-home" class="touch-target flex flex-col items-center justify-center text-slate-600 hover:text-slate-900 active:scale-95 transition-all cursor-pointer">
+        <i data-lucide="home" class="w-5 h-5"></i>
+        <span class="text-[10px] font-semibold mt-0.5">Inicio</span>
+      </button>
+
+      <button id="bottom-nav-categories" class="touch-target flex flex-col items-center justify-center text-slate-600 hover:text-slate-900 active:scale-95 transition-all cursor-pointer">
+        <i data-lucide="grid" class="w-5 h-5"></i>
+        <span class="text-[10px] font-semibold mt-0.5">Categorías</span>
+      </button>
+
+      <button id="bottom-cart-btn" class="open-cart-btn touch-target flex flex-col items-center justify-center text-slate-900 relative active:scale-95 transition-all cursor-pointer">
+        <div class="relative">
+          <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+          <span class="cart-badge hidden absolute -top-1.5 -right-2 bg-teal-600 text-white font-extrabold text-[10px] w-4 h-4 rounded-full items-center justify-center">
+            0
+          </span>
+        </div>
+        <span class="text-[10px] font-bold mt-0.5">Carrito</span>
+      </button>
+
+      <button id="bottom-nav-contact" class="touch-target flex flex-col items-center justify-center text-emerald-600 hover:text-emerald-700 active:scale-95 transition-all cursor-pointer">
+        <i data-lucide="message-circle" class="w-4 h-4"></i>
+        <span class="text-[10px] font-bold mt-0.5">WhatsApp</span>
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- ========================================================================= -->
+  <!-- SCRIPTS                                                                   -->
+  <!-- ========================================================================= -->
+  <script src="js/data.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/checkout.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
