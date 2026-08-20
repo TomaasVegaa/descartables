@@ -55,8 +55,7 @@ const CheckoutManager = {
   },
 
   getSelectedDelivery() {
-    const deliveryRadio = document.querySelector('input[name="delivery-method"]:checked');
-    return deliveryRadio ? deliveryRadio.value : 'retiro';
+    return 'envio';
   },
 
   getSelectedPayment() {
@@ -65,25 +64,6 @@ const CheckoutManager = {
   },
 
   updateDeliveryFields() {
-    const isRetiro = this.getSelectedDelivery() === 'retiro';
-    const addressWrapper = document.getElementById('address-wrapper');
-    const addressInput = document.getElementById('checkout-address');
-    const pickupInfo = document.getElementById('pickup-info-box');
-
-    if (isRetiro) {
-      addressInput.disabled = true;
-      addressInput.classList.add('bg-slate-100', 'text-slate-400', 'cursor-not-allowed');
-      addressInput.placeholder = 'No requerida para Retiro en Local';
-      addressInput.value = '';
-      if (addressWrapper) addressWrapper.classList.add('opacity-50');
-      if (pickupInfo) pickupInfo.classList.remove('hidden');
-    } else {
-      addressInput.disabled = false;
-      addressInput.classList.remove('bg-slate-100', 'text-slate-400', 'cursor-not-allowed');
-      addressInput.placeholder = 'Calle, número, piso/depto, barrio (Tucumán)';
-      if (addressWrapper) addressWrapper.classList.remove('opacity-50');
-      if (pickupInfo) pickupInfo.classList.add('hidden');
-    }
     this.updateCheckoutSummary();
   },
 
@@ -98,7 +78,7 @@ const CheckoutManager = {
 
     if (subtotalEl) subtotalEl.textContent = `$ ${totals.subtotal.toLocaleString('es-AR')}`;
 
-    const totalDiscounts = totals.wholesaleDiscount + totals.transferDiscount;
+    const totalDiscounts = totals.transferDiscount;
     if (discountRow && discountEl) {
       if (totalDiscounts > 0) {
         discountRow.classList.remove('hidden');
@@ -113,11 +93,9 @@ const CheckoutManager = {
 
   generateWhatsAppMessage(formData) {
     const totals = CartManager.getTotals(formData.paymentMethod);
-    const deliveryText = formData.deliveryMethod === 'retiro' 
-      ? 'Retiro en Local (Calle Raúl Colombres 123, San Miguel de Tucumán)' 
-      : 'Envío a Domicilio';
+    const deliveryText = 'Envío a Domicilio';
     
-    const addressText = formData.deliveryMethod === 'retiro' ? 'N/A (Retiro en Sucursal)' : formData.address;
+    const addressText = formData.address;
     const paymentText = formData.paymentMethod === 'transferencia' 
       ? 'Transferencia Bancaria (10% OFF)' 
       : 'Efectivo al recibir';
@@ -131,9 +109,6 @@ const CheckoutManager = {
 
     // Desglose de descuentos
     const appliedDiscounts = [];
-    if (totals.wholesaleDiscount > 0) {
-      appliedDiscounts.push(`Descuento Mayorista 10% (-$ ${totals.wholesaleDiscount.toLocaleString('es-AR')})`);
-    }
     if (totals.transferDiscount > 0) {
       appliedDiscounts.push(`Descuento Transferencia 10% (-$ ${totals.transferDiscount.toLocaleString('es-AR')})`);
     }
@@ -243,10 +218,7 @@ _Muchas gracias. Aguardo la confirmación de stock y los datos para realizar el 
     if (closeModalBtn) closeModalBtn.addEventListener('click', () => this.closeModal());
     if (cancelModalBtn) cancelModalBtn.addEventListener('click', () => this.closeModal());
 
-    document.querySelectorAll('input[name="delivery-method"]').forEach(radio => {
-      radio.addEventListener('change', () => this.updateDeliveryFields());
-    });
-
+    // Solo reaccionamos a cambio de pago
     document.querySelectorAll('input[name="payment-method"]').forEach(radio => {
       radio.addEventListener('change', () => this.updateCheckoutSummary());
     });

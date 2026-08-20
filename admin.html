@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Universo Descartables</title>
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚙️</text></svg>" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300..800&family=Rubik:wght@400..800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            heading: ['Rubik', 'sans-serif'],
+            sans: ['Nunito Sans', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              teal: '#0d9488',
+              dark: '#0f172a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex hidden" id="admin-body">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-slate-900 text-white flex flex-col hidden md:flex shrink-0 fixed inset-y-0 z-40">
+    <div class="p-5 border-b border-slate-800 flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-teal-500 text-white flex items-center justify-center">
+        <i data-lucide="package" class="w-5 h-5"></i>
+      </div>
+      <div>
+        <h1 class="font-heading font-bold text-sm leading-tight">Universo</h1>
+        <p class="text-[10px] text-teal-400 font-bold uppercase tracking-widest">Admin Panel</p>
+      </div>
+    </div>
+
+    <nav class="flex-1 overflow-y-auto p-4 space-y-2 text-sm font-semibold">
+      <button onclick="AdminApp.switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-teal-600 text-white transition">
+        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+      </button>
+      <button onclick="AdminApp.switchTab('products')" id="nav-products" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
+        <i data-lucide="shopping-bag" class="w-4 h-4"></i> Productos
+      </button>
+      <button onclick="AdminApp.switchTab('settings')" id="nav-settings" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
+        <i data-lucide="settings" class="w-4 h-4"></i> Configuración
+      </button>
+      <a href="index.html" target="_blank" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition mt-6">
+        <i data-lucide="external-link" class="w-4 h-4"></i> Ver Tienda
+      </a>
+    </nav>
+
+    <div class="p-4 border-t border-slate-800">
+      <button onclick="AdminApp.logout()" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-rose-600/20 hover:text-rose-400 transition">
+        <i data-lucide="log-out" class="w-4 h-4"></i> Cerrar Sesión
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 md:ml-64 flex flex-col min-h-screen">
+    <header class="bg-white border-b border-slate-200 p-4 sm:px-8 flex items-center justify-between sticky top-0 z-30">
+      <div class="flex items-center gap-3 md:hidden">
+        <button onclick="document.querySelector('aside').classList.toggle('hidden')" class="p-2 -ml-2 rounded-lg text-slate-600 bg-slate-100">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        <span class="font-heading font-bold text-slate-900">Admin</span>
+      </div>
+      <h2 id="header-title" class="hidden md:block font-heading text-lg font-bold text-slate-900">Dashboard</h2>
+      
+      <div class="flex items-center gap-3">
+        <button onclick="AdminApp.exportData()" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold transition">
+          <i data-lucide="download" class="w-4 h-4"></i> Respaldar JSON
+        </button>
+        <button onclick="AdminApp.resetDefaults()" class="hidden sm:flex items-center gap-2 bg-rose-50 text-rose-600 hover:bg-rose-100 px-3 py-2 rounded-xl text-xs font-bold transition">
+          <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Reset
+        </button>
+      </div>
+    </header>
+
+    <div class="p-4 sm:p-8 flex-1 overflow-y-auto">
+      
+      <!-- TAB: DASHBOARD -->
+      <div id="tab-dashboard" class="tab-content space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center">
+              <i data-lucide="package" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Productos Totales</p>
+              <h3 id="stat-products" class="font-heading text-2xl font-black text-slate-900">0</h3>
+            </div>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <i data-lucide="tag" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">En Promoción</p>
+              <h3 id="stat-promos" class="font-heading text-2xl font-black text-slate-900">0</h3>
+            </div>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center">
+              <i data-lucide="message-circle" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">WhatsApp Actual</p>
+              <h3 id="stat-phone" class="font-heading text-lg font-black text-slate-900 truncate">-</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+            <h3 class="font-heading font-bold text-slate-900">Herramientas Rápidas</h3>
+          </div>
+          <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button onclick="AdminApp.switchTab('products'); AdminApp.openProductModal()" class="flex items-center gap-3 p-4 rounded-xl border border-slate-200 hover:border-teal-500 hover:bg-teal-50/50 transition text-left group">
+              <div class="w-10 h-10 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <i data-lucide="plus" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-sm text-slate-900">Agregar Nuevo Producto</h4>
+                <p class="text-xs text-slate-500 mt-0.5">Subir foto y precio al catálogo</p>
+              </div>
+            </button>
+            <button onclick="AdminApp.switchTab('settings')" class="flex items-center gap-3 p-4 rounded-xl border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/50 transition text-left group">
+              <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <i data-lucide="settings-2" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-sm text-slate-900">Ajustar Tienda</h4>
+                <p class="text-xs text-slate-500 mt-0.5">Teléfono, descuentos y anuncios</p>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: PRODUCTS -->
+      <div id="tab-products" class="tab-content hidden space-y-4">
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="relative w-full sm:w-72">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+            <input type="text" id="admin-search-product" placeholder="Buscar por nombre o SKU..." class="w-full pl-9 pr-4 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500" />
+          </div>
+          <button onclick="AdminApp.openProductModal()" class="w-full sm:w-auto bg-teal-600 hover:bg-teal-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition">
+            <i data-lucide="plus" class="w-4 h-4"></i> Nuevo Producto
+          </button>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse whitespace-nowrap">
+              <thead>
+                <tr class="bg-slate-50 text-xs text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
+                  <th class="p-4">Producto</th>
+                  <th class="p-4">Categoría</th>
+                  <th class="p-4">Precio</th>
+                  <th class="p-4 text-center">Insignia</th>
+                  <th class="p-4 text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="admin-products-tbody" class="text-sm divide-y divide-slate-100">
+                <!-- Render dinámico -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: SETTINGS -->
+      <div id="tab-settings" class="tab-content hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm max-w-2xl">
+          <h3 class="font-heading font-bold text-lg text-slate-900 border-b border-slate-100 pb-4 mb-5">Configuración Principal</h3>
+          
+          <form id="settings-form" class="space-y-5">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Nombre de la Tienda</label>
+              <input type="text" id="cfg-name" class="w-full px-4 py-2 text-sm rounded-xl border border-slate-300 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 outline-none" />
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">WhatsApp (Número exacto)</label>
+                <input type="text" id="cfg-phone" placeholder="Ej: 5493816604958" class="w-full px-4 py-2 text-sm rounded-xl border border-slate-300 focus:border-teal-500 outline-none" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">WhatsApp (Para mostrar)</label>
+                <input type="text" id="cfg-phoneFormatted" placeholder="Ej: 381 660-4958" class="w-full px-4 py-2 text-sm rounded-xl border border-slate-300 focus:border-teal-500 outline-none" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Descuento Transferencia (%)</label>
+              <input type="number" id="cfg-transferDiscount" min="0" max="100" class="w-full px-4 py-2 text-sm rounded-xl border border-slate-300 focus:border-teal-500 outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Mensajes Superiores (Separados por renglón)</label>
+              <textarea id="cfg-announcements" rows="3" class="w-full px-4 py-2 text-sm rounded-xl border border-slate-300 focus:border-teal-500 outline-none"></textarea>
+            </div>
+            
+            <div class="pt-4 flex justify-end">
+              <button type="submit" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md transition">Guardar Configuración</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Product Form Modal -->
+  <div id="modal-product" class="fixed inset-0 bg-slate-900/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl w-full max-w-xl shadow-2xl flex flex-col max-h-[90vh]">
+      <div class="p-4 border-b border-slate-100 flex justify-between items-center shrink-0 bg-slate-50 rounded-t-2xl">
+        <h3 id="modal-product-title" class="font-heading font-bold text-lg text-slate-900">Nuevo Producto</h3>
+        <button onclick="AdminApp.closeProductModal()" class="text-slate-400 hover:text-slate-700 bg-white rounded-full p-1 border border-slate-200"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <form id="product-form" class="p-5 overflow-y-auto custom-scrollbar space-y-4">
+        <input type="hidden" id="prod-id" />
+        
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Nombre</label>
+          <input type="text" id="prod-name" required class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-teal-500 outline-none" />
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Categoría ID</label>
+            <select id="prod-category" required class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-teal-500 outline-none bg-white">
+              <option value="envases">Envases & Viandas</option>
+              <option value="vasos">Vasos & Bebidas</option>
+              <option value="bolsas">Bolsas & Papelera</option>
+              <option value="reposteria">Repostería & Panadería</option>
+              <option value="higiene">Higiene & Limpieza</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">SKU</label>
+            <input type="text" id="prod-sku" required class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-teal-500 outline-none" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Precio ($)</label>
+            <input type="number" id="prod-price" required min="0" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-teal-500 outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Precio Promo ($) (Opcional)</label>
+            <input type="number" id="prod-promo" min="0" placeholder="Ej: 7500" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-teal-500 outline-none" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Insignia (Badge)</label>
+          <select id="prod-badge" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-teal-500 outline-none bg-white">
+            <option value="">Ninguna</option>
+            <option value="10% OFF">10% OFF (Promo)</option>
+            <option value="Más Vendido">Más Vendido (Destacado)</option>
+            <option value="Eco-friendly">Eco-friendly</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Presentación (Ej: Pack x 50)</label>
+          <input type="text" id="prod-pack" required class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-teal-500 outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Descripción</label>
+          <textarea id="prod-desc" rows="3" required class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-teal-500 outline-none"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">URL de Imagen</label>
+          <input type="url" id="prod-image" required placeholder="https://..." class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-teal-500 outline-none" />
+          <p class="text-[10px] text-slate-500 mt-1">Usa URLs de imágenes existentes o carga una base64.</p>
+        </div>
+
+      </form>
+      <div class="p-4 border-t border-slate-100 flex justify-end gap-3 shrink-0 bg-slate-50 rounded-b-2xl">
+        <button onclick="AdminApp.closeProductModal()" class="px-5 py-2 text-sm font-bold text-slate-600 hover:bg-slate-200 rounded-xl transition">Cancelar</button>
+        <button form="product-form" type="submit" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-xl text-sm font-bold shadow-md transition">Guardar Producto</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="modal-login" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl p-8 text-center">
+      <div class="w-16 h-16 rounded-full bg-slate-900 text-white flex items-center justify-center mx-auto mb-4 shadow-lg">
+        <i data-lucide="lock" class="w-8 h-8"></i>
+      </div>
+      <h2 class="font-heading font-black text-2xl text-slate-900 mb-1">Acceso Restringido</h2>
+      <p class="text-xs text-slate-500 mb-6">Ingresa el PIN para administrar la tienda.</p>
+      
+      <form id="login-form" class="space-y-4">
+        <input type="password" id="login-pin" placeholder="••••" required class="w-full text-center tracking-[1em] text-2xl font-bold px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-teal-500 outline-none transition" />
+        <p id="login-error" class="text-xs text-rose-500 hidden font-bold">PIN incorrecto.</p>
+        <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-3.5 rounded-xl font-bold shadow-md transition">Desbloquear</button>
+      </form>
+      <p class="text-[10px] text-slate-400 mt-5">PIN por defecto: 1234</p>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

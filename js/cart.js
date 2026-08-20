@@ -85,30 +85,15 @@ const CartManager = {
       return sum + (unit * item.quantity);
     }, 0);
 
-    const isWholesaleUnlocked = subtotal >= STORE_CONFIG.wholesaleThreshold;
-    const missingForWholesale = Math.max(0, STORE_CONFIG.wholesaleThreshold - subtotal);
-    const progressPercent = Math.min(100, Math.round((subtotal / STORE_CONFIG.wholesaleThreshold) * 100));
-
-    // Descuento mayorista (10% si >= $40.000)
-    const wholesaleDiscount = isWholesaleUnlocked 
-      ? Math.round(subtotal * (STORE_CONFIG.wholesaleDiscountPercent / 100)) 
-      : 0;
-
-    const subtotalAfterWholesale = subtotal - wholesaleDiscount;
-
-    // Descuento por transferencia (10% adicional)
+    // Descuento por transferencia (ej: 10%)
     const transferDiscount = (paymentMethod === 'transferencia')
-      ? Math.round(subtotalAfterWholesale * (STORE_CONFIG.transferDiscountPercent / 100))
+      ? Math.round(subtotal * (STORE_CONFIG.transferDiscountPercent / 100))
       : 0;
 
-    const finalTotal = subtotalAfterWholesale - transferDiscount;
+    const finalTotal = subtotal - transferDiscount;
 
     return {
       subtotal,
-      isWholesaleUnlocked,
-      missingForWholesale,
-      progressPercent,
-      wholesaleDiscount,
       transferDiscount,
       finalTotal,
       itemCount: this.getCount()
@@ -245,15 +230,6 @@ const CartManager = {
     `).join('');
 
     document.getElementById('cart-subtotal-val').textContent = `$ ${totals.subtotal.toLocaleString('es-AR')}`;
-    
-    const wholesaleRow = document.getElementById('cart-wholesale-row');
-    const wholesaleVal = document.getElementById('cart-wholesale-val');
-    if (totals.wholesaleDiscount > 0) {
-      wholesaleRow.classList.remove('hidden');
-      wholesaleVal.textContent = `-$ ${totals.wholesaleDiscount.toLocaleString('es-AR')}`;
-    } else {
-      wholesaleRow.classList.add('hidden');
-    }
 
     const transferRow = document.getElementById('cart-transfer-row');
     const transferVal = document.getElementById('cart-transfer-val');
@@ -271,38 +247,21 @@ const CartManager = {
     const container = document.getElementById('cart-discount-meter');
     if (!container) return;
 
-    if (totals.isWholesaleUnlocked) {
-      container.innerHTML = `
-        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
-          <div class="flex items-center gap-2 mb-1.5">
-            <span class="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold">✓</span>
-            <p class="text-xs font-bold text-emerald-900">
-              ¡Descuento Mayorista del 10% Aplicado!
-            </p>
-          </div>
-          <div class="w-full bg-emerald-200 rounded-full h-2 overflow-hidden">
-            <div class="bg-emerald-600 h-2 rounded-full w-full"></div>
-          </div>
-          <p class="text-[11px] text-emerald-800 mt-1 flex items-center justify-between">
-            <span>Ahorro: <strong>$ ${totals.wholesaleDiscount.toLocaleString('es-AR')}</strong></span>
-            <span class="font-bold text-[10px] bg-emerald-200/80 px-1.5 py-0.5 rounded text-emerald-900">10% OFF</span>
+    container.innerHTML = `
+      <div class="bg-teal-50 border border-teal-200 rounded-xl p-3 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="w-6 h-6 rounded-full bg-teal-600 text-white flex items-center justify-center text-xs font-bold shadow-sm">
+            <i data-lucide="truck" class="w-3.5 h-3.5"></i>
+          </span>
+          <p class="text-xs font-bold text-teal-900">
+            ¡Envíos rápidos a domicilio!
           </p>
         </div>
-      `;
-    } else {
-      container.innerHTML = `
-        <div class="bg-slate-100 border border-slate-200 rounded-xl p-3">
-          <div class="flex items-center justify-between gap-2 mb-1.5">
-            <p class="text-xs text-slate-700">
-              Agregá <strong class="text-slate-900 font-extrabold">$ ${totals.missingForWholesale.toLocaleString('es-AR')}</strong> para <strong class="text-teal-700 font-bold">10% OFF Mayorista</strong>
-            </p>
-            <span class="text-xs font-bold text-slate-700">${totals.progressPercent}%</span>
-          </div>
-          <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-            <div class="bg-teal-600 h-2 rounded-full transition-all duration-300" style="width: ${totals.progressPercent}%"></div>
-          </div>
-        </div>
-      `;
-    }
+        <span class="text-[10px] bg-teal-200/80 px-2 py-1 rounded-md text-teal-900 font-bold">
+          Tucumán
+        </span>
+      </div>
+    `;
+    if (window.lucide) window.lucide.createIcons();
   }
 };

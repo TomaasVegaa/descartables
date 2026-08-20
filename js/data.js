@@ -1,5 +1,5 @@
-// Catálogo de productos y configuración de tienda - Universo Descartables (Tucumán)
-const CATEGORIES = [
+// Catálogo de productos y configuración de tienda - Universo Descartables
+const DEFAULT_CATEGORIES = [
   { id: 'todos', name: 'Todos los Productos', icon: 'grid', count: 15 },
   { id: 'envases', name: 'Envases & Viandas', icon: 'package', count: 3 },
   { id: 'vasos', name: 'Vasos & Bebidas', icon: 'coffee', count: 3 },
@@ -8,7 +8,7 @@ const CATEGORIES = [
   { id: 'higiene', name: 'Higiene & Limpieza', icon: 'sparkles', count: 3 }
 ];
 
-const PRODUCTS = [
+const DEFAULT_PRODUCTS = [
   // 1. Envases & Viandas
   {
     id: 'env-01',
@@ -220,8 +220,8 @@ const PRODUCTS = [
     categoryName: 'Higiene & Limpieza',
     price: 14500,
     promoPrice: null,
-    badge: 'Mayorista',
-    badgeType: 'wholesale',
+    badge: 'Destacado',
+    badgeType: 'best-seller',
     image: 'https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600&auto=format&fit=crop&q=80',
     description: 'Toallas de mano descartables para dispensadores institucionales de baños y cocinas comerciales.',
     packInfo: 'Caja x 2000 hojas (10 paquetes x 200)',
@@ -245,39 +245,95 @@ const PRODUCTS = [
   }
 ];
 
-// Configuración de la Tienda (Tucumán)
-const STORE_CONFIG = {
+const DEFAULT_STORE_CONFIG = {
   name: 'Universo Descartables',
   tagline: 'Envases, Descartables y Packaging para Gastronomía y Eventos',
   phone: '5493816604958',
   phoneFormatted: '381 660-4958',
-  address: 'Calle Raúl Colombres 123, San Miguel de Tucumán',
-  addressFull: 'Calle Raúl Colombres 123, San Miguel de Tucumán, Tucumán',
-  wholesaleThreshold: 40000, // $40.000 para descuento mayorista
-  wholesaleDiscountPercent: 10, // 10%
-  transferDiscountPercent: 10, // 10% adicional por transferencia
+  address: 'Envíos a Domicilio en San Miguel de Tucumán y Gran Tucumán',
+  addressFull: 'San Miguel de Tucumán, Tucumán (Sólo Envíos a Domicilio)',
+  transferDiscountPercent: 10,
   currency: 'ARS',
   announcements: [
-    'Envíos en San Miguel de Tucumán y retiro gratuito en Calle Raúl Colombres 123',
-    '10% de descuento directo abonando con Transferencia Bancaria',
-    '¡Comprando más de $40.000 obtenés un 10% de Descuento Mayorista automático!'
+    'Envíos rápidos a domicilio en San Miguel de Tucumán y alrededores',
+    '10% de descuento directo abonando con Transferencia Bancaria'
   ],
   faqs: [
     {
-      q: '¿Cómo coordino el retiro en el local?',
-      a: 'Una vez enviado tu pedido por WhatsApp, te confirmamos el stock en minutos y podés retirar de Lunes a Viernes de 8:30 a 18:00 hs en Calle Raúl Colombres 123, San Miguel de Tucumán.'
+      q: '¿Cómo coordinan los envíos a domicilio?',
+      a: 'Una vez enviado tu pedido por WhatsApp, te confirmamos el stock y coordinamos la entrega. Realizamos envíos por cadetería en San Miguel de Tucumán y Gran Tucumán (Yerba Buena, Tafí Viejo, Banda del Río Salí) y por comisionista al interior de la provincia.'
     },
     {
-      q: '¿Hacen envíos a domicilio en Tucumán?',
-      a: 'Sí, realizamos envíos por cadetería en San Miguel de Tucumán y Gran Tucumán (Yerba Buena, Tafí Viejo, Banda del Río Salí) y por comisionista al interior de la provincia.'
+      q: '¿Se puede retirar personalmente?',
+      a: 'Actualmente operamos exclusivamente de forma online mediante envíos directos a domicilio, asegurando rapidez y comodidad para tu negocio o evento.'
     },
     {
-      q: '¿Cómo funciona el descuento mayorista?',
-      a: 'Si el subtotal de tu carrito supera los $40.000, el sistema te aplica un 10% de descuento automático. Además, si pagás por transferencia bancaria, sumás otro 10% adicional.'
+      q: '¿Tienen descuentos por pago en transferencia?',
+      a: 'Sí, aplicamos un 10% de descuento automático sobre el total de la compra si abonás mediante transferencia bancaria.'
     },
     {
-      q: '¿Tienen precios por bulto cerrado para comercios?',
-      a: 'Sí, abastecemos a panaderías, rotiserías, restaurantes, bares y distribuidores de todo Tucumán. Consultanos por WhatsApp para cotizaciones por volumen.'
+      q: '¿Tienen precios especiales para comercios?',
+      a: 'Sí, abastecemos a panaderías, rotiserías, restaurantes, bares y organizadores de eventos. Consultanos por WhatsApp para cotizaciones por volumen.'
     }
   ]
 };
+
+// Variables globales para ser consumidas por la app
+let CATEGORIES = [];
+let PRODUCTS = [];
+let STORE_CONFIG = {};
+
+// Administrador de Datos reactivo con localStorage
+const DataManager = {
+  storageKeys: {
+    products: 'universo_admin_products_v1',
+    categories: 'universo_admin_categories_v1',
+    config: 'universo_admin_config_v1'
+  },
+
+  init() {
+    this.loadData();
+  },
+
+  loadData() {
+    try {
+      const savedProducts = localStorage.getItem(this.storageKeys.products);
+      const savedCategories = localStorage.getItem(this.storageKeys.categories);
+      const savedConfig = localStorage.getItem(this.storageKeys.config);
+
+      PRODUCTS = savedProducts ? JSON.parse(savedProducts) : DEFAULT_PRODUCTS;
+      CATEGORIES = savedCategories ? JSON.parse(savedCategories) : DEFAULT_CATEGORIES;
+      STORE_CONFIG = savedConfig ? JSON.parse(savedConfig) : DEFAULT_STORE_CONFIG;
+    } catch (e) {
+      console.error('Error cargando datos desde localStorage, usando defaults', e);
+      PRODUCTS = DEFAULT_PRODUCTS;
+      CATEGORIES = DEFAULT_CATEGORIES;
+      STORE_CONFIG = DEFAULT_STORE_CONFIG;
+    }
+  },
+
+  saveData() {
+    try {
+      localStorage.setItem(this.storageKeys.products, JSON.stringify(PRODUCTS));
+      localStorage.setItem(this.storageKeys.categories, JSON.stringify(CATEGORIES));
+      localStorage.setItem(this.storageKeys.config, JSON.stringify(STORE_CONFIG));
+    } catch (e) {
+      console.error('Error guardando datos en localStorage', e);
+    }
+  },
+
+  resetDefaults() {
+    localStorage.removeItem(this.storageKeys.products);
+    localStorage.removeItem(this.storageKeys.categories);
+    localStorage.removeItem(this.storageKeys.config);
+    this.loadData();
+    
+    // Si estamos en el lado del cliente (app.js), recargamos
+    if(window.App && typeof window.App.init === 'function'){
+      window.location.reload();
+    }
+  }
+};
+
+// Inicializamos el DataManager al cargar el script
+DataManager.init();
