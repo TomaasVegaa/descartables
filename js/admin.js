@@ -80,6 +80,17 @@ const AdminApp = {
       activeBtn.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-slate-800');
     }
 
+    document.querySelectorAll('.nav-btn-mobile').forEach(btn => {
+      btn.classList.remove('text-teal-600');
+      btn.classList.add('text-slate-400', 'hover:text-slate-900');
+    });
+
+    const activeMobileBtn = document.getElementById(`nav-mobile-${tabId}`);
+    if (activeMobileBtn) {
+      activeMobileBtn.classList.add('text-teal-600');
+      activeMobileBtn.classList.remove('text-slate-400', 'hover:text-slate-900');
+    }
+
     const titles = {
       'dashboard': 'Dashboard',
       'products': 'Catálogo de Productos',

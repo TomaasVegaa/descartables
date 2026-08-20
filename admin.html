@@ -79,13 +79,7 @@
   <!-- Main Content -->
   <main class="flex-1 md:ml-64 flex flex-col min-h-screen">
     <header class="bg-white border-b border-slate-200 p-4 sm:px-8 flex items-center justify-between sticky top-0 z-30">
-      <div class="flex items-center gap-3 md:hidden">
-        <button onclick="document.querySelector('aside').classList.toggle('hidden')" class="p-2 -ml-2 rounded-lg text-slate-600 bg-slate-100">
-          <i data-lucide="menu" class="w-5 h-5"></i>
-        </button>
-        <span class="font-heading font-bold text-slate-900">Admin</span>
-      </div>
-      <h2 id="header-title" class="hidden md:block font-heading text-lg font-bold text-slate-900">Dashboard</h2>
+      <h2 id="header-title" class="font-heading text-lg font-bold text-slate-900">Dashboard</h2>
       
       <div class="flex items-center gap-3">
         <button onclick="AdminApp.exportData()" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold transition">
@@ -97,7 +91,7 @@
       </div>
     </header>
 
-    <div class="p-4 sm:p-8 flex-1 overflow-y-auto">
+    <div class="p-4 sm:p-8 flex-1 overflow-y-auto pb-24 md:pb-8">
       
       <!-- TAB: DASHBOARD -->
       <div id="tab-dashboard" class="tab-content space-y-6">
@@ -323,6 +317,22 @@
       <p class="text-[10px] text-slate-400 mt-5">PIN por defecto: 1234</p>
     </div>
   </div>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 flex items-center justify-around pb-[env(safe-area-inset-bottom)] md:hidden z-40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+    <button onclick="AdminApp.switchTab('dashboard')" id="nav-mobile-dashboard" class="nav-btn-mobile flex-1 py-3 flex flex-col items-center gap-1 text-teal-600 transition">
+      <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold">Inicio</span>
+    </button>
+    <button onclick="AdminApp.switchTab('products')" id="nav-mobile-products" class="nav-btn-mobile flex-1 py-3 flex flex-col items-center gap-1 text-slate-400 hover:text-slate-900 transition">
+      <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold">Catálogo</span>
+    </button>
+    <button onclick="AdminApp.switchTab('settings')" id="nav-mobile-settings" class="nav-btn-mobile flex-1 py-3 flex flex-col items-center gap-1 text-slate-400 hover:text-slate-900 transition">
+      <i data-lucide="settings" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold">Ajustes</span>
+    </button>
+  </nav>
 
   <script src="js/data.js"></script>
   <script src="js/admin.js"></script>
