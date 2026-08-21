@@ -147,12 +147,12 @@ const AdminApp = {
             </div>
           </div>
         </td>
-        <td class="p-4 text-slate-600">${p.categoryName}</td>
+        <td class="p-4 text-slate-600 hidden sm:table-cell">${p.categoryName}</td>
         <td class="p-4">
           <p class="font-bold text-slate-900">$${(p.promoPrice || p.price).toLocaleString('es-AR')}</p>
           ${p.promoPrice ? `<p class="text-[10px] text-slate-400 line-through">$${p.price.toLocaleString('es-AR')}</p>` : ''}
         </td>
-        <td class="p-4 text-center">
+        <td class="p-4 text-center hidden md:table-cell">
           ${p.badge ? `<span class="px-2 py-1 bg-teal-100 text-teal-800 text-[10px] font-bold rounded-md">${p.badge}</span>` : '-'}
         </td>
         <td class="p-4 text-right">
@@ -282,7 +282,7 @@ const AdminApp = {
             <p class="font-bold text-slate-900">${c.name}</p>
           </div>
         </td>
-        <td class="p-4 text-slate-600 font-mono text-xs">${c.id}</td>
+        <td class="p-4 text-slate-600 font-mono text-xs hidden sm:table-cell">${c.id}</td>
         <td class="p-4 text-right">
           ${c.id === 'todos' ? '<span class="text-[10px] text-slate-400 font-bold uppercase">Predeterminada</span>' : `
           <div class="flex items-center justify-end gap-2">
