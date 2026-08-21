@@ -61,6 +61,9 @@
       <button onclick="AdminApp.switchTab('products')" id="nav-products" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
         <i data-lucide="shopping-bag" class="w-4 h-4"></i> Productos
       </button>
+      <button onclick="AdminApp.switchTab('categories')" id="nav-categories" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
+        <i data-lucide="tags" class="w-4 h-4"></i> Categorías
+      </button>
       <button onclick="AdminApp.switchTab('settings')" id="nav-settings" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
         <i data-lucide="settings" class="w-4 h-4"></i> Configuración
       </button>
@@ -184,6 +187,32 @@
         </div>
       </div>
 
+      <!-- TAB: CATEGORIES -->
+      <div id="tab-categories" class="tab-content hidden space-y-4">
+        <div class="flex justify-end bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+          <button onclick="AdminApp.openCategoryModal()" class="w-full sm:w-auto bg-teal-600 hover:bg-teal-700 text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition">
+            <i data-lucide="plus" class="w-4 h-4"></i> Nueva Categoría
+          </button>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse whitespace-nowrap">
+              <thead>
+                <tr class="bg-slate-50 text-xs text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
+                  <th class="p-4">Icono & Nombre</th>
+                  <th class="p-4">ID Interno</th>
+                  <th class="p-4 text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="admin-categories-tbody" class="text-sm divide-y divide-slate-100">
+                <!-- Render dinámico -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       <!-- TAB: SETTINGS -->
       <div id="tab-settings" class="tab-content hidden space-y-6">
         <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm max-w-2xl">
@@ -242,16 +271,12 @@
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">Categoría ID</label>
             <select id="prod-category" required class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-teal-500 outline-none bg-white">
-              <option value="envases">Envases & Viandas</option>
-              <option value="vasos">Vasos & Bebidas</option>
-              <option value="bolsas">Bolsas & Papelera</option>
-              <option value="reposteria">Repostería & Panadería</option>
-              <option value="higiene">Higiene & Limpieza</option>
+              <!-- Render dinámico -->
             </select>
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">SKU</label>
-            <input type="text" id="prod-sku" required class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-teal-500 outline-none" />
+            <label class="block text-xs font-bold text-slate-700 mb-1">SKU (Opcional)</label>
+            <input type="text" id="prod-sku" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-teal-500 outline-none" />
           </div>
         </div>
 
@@ -306,6 +331,7 @@
       <div class="w-16 h-16 rounded-full bg-slate-900 text-white flex items-center justify-center mx-auto mb-4 shadow-lg">
         <i data-lucide="lock" class="w-8 h-8"></i>
       </div>
+
       <h2 class="font-heading font-black text-2xl text-slate-900 mb-1">Acceso Restringido</h2>
       <p class="text-xs text-slate-500 mb-6">Ingresa el PIN para administrar la tienda.</p>
       
@@ -318,6 +344,40 @@
     </div>
   </div>
 
+  <!-- Category Form Modal -->
+  <div id="modal-category" class="fixed inset-0 bg-slate-900/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl w-full max-w-sm shadow-2xl flex flex-col">
+      <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-2xl">
+        <h3 id="modal-category-title" class="font-heading font-bold text-lg text-slate-900">Nueva Categoría</h3>
+        <button onclick="AdminApp.closeCategoryModal()" class="text-slate-400 hover:text-slate-700 bg-white rounded-full p-1 border border-slate-200"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <form id="category-form" class="p-5 space-y-4">
+        <input type="hidden" id="cat-is-edit" />
+        <input type="hidden" id="cat-old-id" />
+        
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Nombre Visible</label>
+          <input type="text" id="cat-name" required placeholder="Ej: Envases Plásticos" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-teal-500 outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">ID Interno (en minúsculas, sin espacios)</label>
+          <input type="text" id="cat-id" required placeholder="Ej: envases" pattern="[a-z0-9-]+" title="Solo letras minúsculas, números o guiones" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-teal-500 outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Icono (Nombre Lucide)</label>
+          <input type="text" id="cat-icon" required placeholder="Ej: package" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-teal-500 outline-none" />
+          <p class="text-[10px] text-slate-500 mt-1">Busca nombres en <a href="https://lucide.dev/icons" target="_blank" class="text-teal-600 underline">lucide.dev</a></p>
+        </div>
+      </form>
+      <div class="p-4 border-t border-slate-100 flex justify-end gap-3 bg-slate-50 rounded-b-2xl">
+        <button onclick="AdminApp.closeCategoryModal()" class="px-5 py-2 text-sm font-bold text-slate-600 hover:bg-slate-200 rounded-xl transition">Cancelar</button>
+        <button form="category-form" type="submit" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-xl text-sm font-bold shadow-md transition">Guardar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Mobile Bottom Nav -->
   <nav class="fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 flex items-center justify-around pb-[env(safe-area-inset-bottom)] md:hidden z-40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
     <button onclick="AdminApp.switchTab('dashboard')" id="nav-mobile-dashboard" class="nav-btn-mobile flex-1 py-3 flex flex-col items-center gap-1 text-teal-600 transition">
@@ -327,6 +387,10 @@
     <button onclick="AdminApp.switchTab('products')" id="nav-mobile-products" class="nav-btn-mobile flex-1 py-3 flex flex-col items-center gap-1 text-slate-400 hover:text-slate-900 transition">
       <i data-lucide="shopping-bag" class="w-5 h-5"></i>
       <span class="text-[10px] font-bold">Catálogo</span>
+    </button>
+    <button onclick="AdminApp.switchTab('categories')" id="nav-mobile-categories" class="nav-btn-mobile flex-1 py-3 flex flex-col items-center gap-1 text-slate-400 hover:text-slate-900 transition">
+      <i data-lucide="tags" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold">Categorías</span>
     </button>
     <button onclick="AdminApp.switchTab('settings')" id="nav-mobile-settings" class="nav-btn-mobile flex-1 py-3 flex flex-col items-center gap-1 text-slate-400 hover:text-slate-900 transition">
       <i data-lucide="settings" class="w-5 h-5"></i>

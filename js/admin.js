@@ -59,6 +59,11 @@ const AdminApp = {
       prodForm.addEventListener('submit', (e) => this.saveProduct(e));
     }
 
+    const catForm = document.getElementById('category-form');
+    if (catForm) {
+      catForm.addEventListener('submit', (e) => this.saveCategory(e));
+    }
+
     const setForm = document.getElementById('settings-form');
     if (setForm) {
       setForm.addEventListener('submit', (e) => this.saveSettings(e));
@@ -94,12 +99,14 @@ const AdminApp = {
     const titles = {
       'dashboard': 'Dashboard',
       'products': 'Catálogo de Productos',
+      'categories': 'Gestión de Categorías',
       'settings': 'Configuración'
     };
     document.getElementById('header-title').textContent = titles[tabId];
 
     if (tabId === 'dashboard') this.renderDashboard();
     if (tabId === 'products') this.renderProducts();
+    if (tabId === 'categories') this.renderCategories();
     if (tabId === 'settings') this.renderSettings();
   },
 
@@ -164,9 +171,18 @@ const AdminApp = {
     if (window.lucide) window.lucide.createIcons();
   },
 
+  populateCategoryDropdown() {
+    const select = document.getElementById('prod-category');
+    if (!select) return;
+    // Excluir 'todos' de la creación de productos
+    const validCats = CATEGORIES.filter(c => c.id !== 'todos');
+    select.innerHTML = validCats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  },
+
   openProductModal() {
     document.getElementById('product-form').reset();
     document.getElementById('prod-id').value = '';
+    this.populateCategoryDropdown();
     document.getElementById('modal-product-title').textContent = 'Nuevo Producto';
     document.getElementById('modal-product').classList.remove('hidden');
   },
@@ -179,6 +195,7 @@ const AdminApp = {
     const prod = PRODUCTS.find(p => p.id === id);
     if (!prod) return;
 
+    this.populateCategoryDropdown();
     document.getElementById('prod-id').value = prod.id;
     document.getElementById('prod-name').value = prod.name;
     document.getElementById('prod-category').value = prod.category;
@@ -248,6 +265,134 @@ const AdminApp = {
       PRODUCTS = PRODUCTS.filter(p => p.id !== id);
       DataManager.saveData();
       this.renderProducts();
+    }
+  },
+
+  renderCategories() {
+    const tbody = document.getElementById('admin-categories-tbody');
+    if (!tbody) return;
+
+    tbody.innerHTML = CATEGORIES.map(c => `
+      <tr class="hover:bg-slate-50 transition">
+        <td class="p-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
+              <i data-lucide="${c.icon}" class="w-5 h-5"></i>
+            </div>
+            <p class="font-bold text-slate-900">${c.name}</p>
+          </div>
+        </td>
+        <td class="p-4 text-slate-600 font-mono text-xs">${c.id}</td>
+        <td class="p-4 text-right">
+          ${c.id === 'todos' ? '<span class="text-[10px] text-slate-400 font-bold uppercase">Predeterminada</span>' : `
+          <div class="flex items-center justify-end gap-2">
+            <button onclick="AdminApp.editCategory('${c.id}')" class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition" title="Editar">
+              <i data-lucide="edit-2" class="w-4 h-4"></i>
+            </button>
+            <button onclick="AdminApp.deleteCategory('${c.id}')" class="p-2 text-rose-600 hover:bg-rose-50 rounded-lg transition" title="Eliminar">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+          </div>
+          `}
+        </td>
+      </tr>
+    `).join('');
+
+    if (window.lucide) window.lucide.createIcons();
+  },
+
+  openCategoryModal() {
+    document.getElementById('category-form').reset();
+    document.getElementById('cat-is-edit').value = 'false';
+    document.getElementById('cat-old-id').value = '';
+    document.getElementById('modal-category-title').textContent = 'Nueva Categoría';
+    document.getElementById('modal-category').classList.remove('hidden');
+  },
+
+  closeCategoryModal() {
+    document.getElementById('modal-category').classList.add('hidden');
+  },
+
+  editCategory(id) {
+    if (id === 'todos') return;
+    const cat = CATEGORIES.find(c => c.id === id);
+    if (!cat) return;
+
+    document.getElementById('cat-is-edit').value = 'true';
+    document.getElementById('cat-old-id').value = cat.id;
+    document.getElementById('cat-name').value = cat.name;
+    document.getElementById('cat-id').value = cat.id;
+    document.getElementById('cat-icon').value = cat.icon;
+
+    document.getElementById('modal-category-title').textContent = 'Editar Categoría';
+    document.getElementById('modal-category').classList.remove('hidden');
+  },
+
+  saveCategory(e) {
+    e.preventDefault();
+    const isEdit = document.getElementById('cat-is-edit').value === 'true';
+    const oldId = document.getElementById('cat-old-id').value;
+    
+    const id = document.getElementById('cat-id').value.trim().toLowerCase();
+    const name = document.getElementById('cat-name').value.trim();
+    const icon = document.getElementById('cat-icon').value.trim() || 'tag';
+
+    if (id === 'todos') {
+      alert("El ID 'todos' está reservado por el sistema.");
+      return;
+    }
+
+    if (!isEdit && CATEGORIES.some(c => c.id === id)) {
+      alert('Ya existe una categoría con este ID interno.');
+      return;
+    }
+
+    if (isEdit) {
+      const idx = CATEGORIES.findIndex(c => c.id === oldId);
+      if (idx > -1) {
+        CATEGORIES[idx].id = id;
+        CATEGORIES[idx].name = name;
+        CATEGORIES[idx].icon = icon;
+      }
+      // Actualizar productos asociados a la categoría editada
+      if (oldId !== id) {
+        PRODUCTS.forEach(p => {
+          if (p.category === oldId) {
+            p.category = id;
+            p.categoryName = name;
+          }
+        });
+      } else {
+        PRODUCTS.forEach(p => {
+          if (p.category === id) {
+            p.categoryName = name;
+          }
+        });
+      }
+    } else {
+      CATEGORIES.push({ id, name, icon, count: 0 });
+    }
+
+    DataManager.saveData();
+    this.closeCategoryModal();
+    this.renderCategories();
+    this.renderProducts();
+    alert('Categoría guardada correctamente.');
+  },
+
+  deleteCategory(id) {
+    if (id === 'todos') return;
+    
+    const prodCount = PRODUCTS.filter(p => p.category === id).length;
+    if (prodCount > 0) {
+      alert(`No puedes eliminar esta categoría porque tiene ${prodCount} producto(s) asignado(s). Cambia los productos a otra categoría primero.`);
+      return;
+    }
+
+    if (confirm('¿Estás seguro de eliminar esta categoría?')) {
+      CATEGORIES = CATEGORIES.filter(c => c.id !== id);
+      DataManager.saveData();
+      this.renderCategories();
     }
   },
 
